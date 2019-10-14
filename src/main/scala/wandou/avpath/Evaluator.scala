@@ -16,7 +16,6 @@ import wandou.avpath.Parser.Syntax
 import wandou.avpath.Parser.UnaryExprSyntax
 import wandou.avpath.Parser.PosSyntax
 import java.nio.ByteBuffer
-import java.util.regex.Pattern
 
 import org.apache.avro.Schema
 import org.apache.avro.Schema.Type
@@ -54,19 +53,7 @@ object Evaluator {
 
   private sealed trait Op
 
-  val pattern: Pattern = Pattern.compile("\\[(\\*|:-?\\d+|-?\\d+:|-?\\d+:-?\\d+)\\]")
-
-  final case class Ctx(value: Any, name: String, schema: Schema, topLevelField: Schema.Field, path: String, target: Option[Target] = None) {
-
-    /**
-     * check if an AVPath will retrieve multiples data. This can happen when the AVPath describe in its request a call
-     * to an array, a predicate or a deep location
-     *
-     * @return true if the AVPath contains mention to an array, a predicate or a deep location
-     */
-    def canRetrieveMultipleElements(): Boolean =
-      path.contains("{") || path.contains("..") || pattern.matcher(path).find
-  }
+  final case class Ctx(value: Any, name: String, schema: Schema, topLevelField: Schema.Field, path: String, target: Option[Target] = None)
 
   def select(root: IndexedRecord, ast: PathSyntax): List[Ctx] = {
     evaluatePath(ast, List(Ctx(root, "", root.getSchema, null, ast.path)), true)
