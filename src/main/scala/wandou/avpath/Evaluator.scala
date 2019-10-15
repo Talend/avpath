@@ -53,6 +53,15 @@ object Evaluator {
 
   private sealed trait Op
 
+  /**
+    *
+    * @param value value retrieve by the AvPath query
+    * @param name name of the current field
+    * @param schema name of the current field
+    * @param topLevelField Name of the parent field
+    * @param path full AvPath to reach the element
+    * @param target target
+    */
   final case class Ctx(value: Any, name: String, schema: Schema, topLevelField: Schema.Field, path: String, target: Option[Target] = None)
 
   def select(root: IndexedRecord, ast: PathSyntax): List[Ctx] = {
@@ -409,7 +418,8 @@ object Evaluator {
               var j = 0
               while (values.hasNext) {
                 val value = values.next
-                // not sure
+                // We are on a list, we name each sub element like the parent.
+                // It should not be troublesome, but it's not right.
                 res ::= Ctx(value, name, elemType, topLevelField, path, Some(TargetArray(arr, j, schema)))
                 j += 1
               }
@@ -451,7 +461,8 @@ object Evaluator {
           var i = 0
           while (values.hasNext) {
             val value = values.next
-            // not sure
+            // We are on a list, we name each sub element like the parent.
+            // It should not be troublesome, but it's not right.
             val elemCtx = Ctx(value, name, elemType, topLevelField, path, Some(TargetArray(arr, i, schema)))
             evaluateExpr(expr.arg, elemCtx) match {
               case true => res ::= elemCtx
@@ -466,7 +477,8 @@ object Evaluator {
           val entries = map.entrySet.iterator
           while (entries.hasNext) {
             val entry = entries.next
-            // TODO not sure
+            // We are on a Map, we name each sub element like the parent.
+            // It should not be troublesome, but it's not right.
             val elemCtx = Ctx(entry.getValue, name, elemType, topLevelField, path, Some(TargetMap(map, entry.getKey, schema)))
             evaluateExpr(expr.arg, elemCtx) match {
               case true => res ::= elemCtx
@@ -496,7 +508,8 @@ object Evaluator {
               var i = 0
               while (values.hasNext) {
                 val value = values.next
-                // TODO not sure
+                // We are on a list, we name each sub element like the parent.
+                // It should not be troublesome, but it's not right.
                 elems(i) = Ctx(value, name, elemType, topLevelField, path, Some(TargetArray(arr, i, schema)))
                 i += 1
               }
