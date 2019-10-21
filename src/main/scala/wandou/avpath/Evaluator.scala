@@ -424,6 +424,12 @@ object Evaluator {
                 j += 1
               }
             }
+          case Ctx(_, name, schema, topLevelField, path, _) if unwrapIfNullable(schema).getType eq Type.RECORD =>
+            val fields = unwrapIfNullable(schema).getFields.iterator
+            while (fields.hasNext) {
+              val field = fields.next
+              res ::= Ctx(null, field.name, field.schema, if (topLevelField != null) topLevelField else field , path, None)
+            }
           case _ => // TODO map
         }
 
