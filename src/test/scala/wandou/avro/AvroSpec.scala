@@ -1,10 +1,12 @@
 package wandou.avro
 
 import org.apache.avro.generic.GenericData
-import org.scalatest.{ Matchers, BeforeAndAfterAll, WordSpecLike }
+import org.scalatest.BeforeAndAfterAll
 import wandou.avro.test.ChargeRecord
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 
-class AvroSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
+class AvroSpec extends AnyWordSpecLike with Matchers with BeforeAndAfterAll {
 
   "An Avro Encode/Decode" when {
 

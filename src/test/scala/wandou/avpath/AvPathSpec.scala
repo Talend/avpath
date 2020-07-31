@@ -8,10 +8,10 @@ import org.apache.avro.generic.GenericData
 import org.apache.avro.generic.GenericRecord
 import org.apache.avro.generic.GenericRecordBuilder
 import org.scalatest.BeforeAndAfterAll
-import org.scalatest.Matchers
-import org.scalatest.WordSpecLike
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 
-class AvPathSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
+class AvPathSpec extends AnyWordSpecLike with Matchers with BeforeAndAfterAll {
 
   "AvPath" when {
 

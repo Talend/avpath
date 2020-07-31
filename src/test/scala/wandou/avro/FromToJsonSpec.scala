@@ -1,9 +1,11 @@
 package wandou.avro
 
-import org.scalatest.{ BeforeAndAfterAll, Matchers, WordSpecLike }
+import org.scalatest.BeforeAndAfterAll
 import wandou.avro.test.Account
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 
-class FromToJsonSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
+class FromToJsonSpec extends AnyWordSpecLike with Matchers with BeforeAndAfterAll {
   val schema = Schemas.account
 
   "FromToJson" when {
