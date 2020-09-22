@@ -2,10 +2,6 @@ import sbt.Keys._
 
 scalaVersion := "2.12.11"
 
-lazy val scala212 = "2.12.11"
-lazy val scala211 = "2.11.12"
-lazy val supportedScalaVersions = List(scala212, scala211)
-
 lazy val avpath = Project("wandou-avpath", file("."))
   .settings(basicSettings: _*)
   .settings(Formatting.settings: _*)
@@ -16,7 +12,7 @@ lazy val avpath = Project("wandou-avpath", file("."))
   .settings(Packaging.settings: _*)
   .settings(sbtavro.SbtAvro.avroSettings ++ avroSettingsTest: _*)
   .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
-  .settings(crossScalaVersions := supportedScalaVersions)
+  .settings(CrossVersions.crossVersionSetting)
 
 lazy val basicSettings = Seq(
   organization := "com.wandoulabs.avro",

@@ -71,3 +71,12 @@ object Packaging {
     NativePackagerKeys.packageName := "wandou-avpath")
 }
 
+object CrossVersions {
+
+  lazy val scala212 = "2.12.11"
+  lazy val scala211 = "2.11.12"
+  lazy val supportedScalaVersions = List(scala212, scala211)
+  lazy val crossVersionSetting = crossScalaVersions := supportedScalaVersions
+
+}
+
