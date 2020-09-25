@@ -17,6 +17,8 @@ object Dependencies {
   val avro = Seq(
     "org.apache.avro" % "avro" % "1.8.2")
 
+  val commonsCollections = "commons-collections" % "commons-collections" % "3.2.2"
+
   val basic: Seq[ModuleID] = log ++ test ++ avro
 
   val all = basic
