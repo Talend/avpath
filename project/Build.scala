@@ -39,7 +39,7 @@ object Formatting {
   val BuildSbtConfig = config("buildsbt") extend Compile
 
   // invoke: build:scalariformFormat
-  val buildFileSettings: Seq[Setting[_]] = //SbtScalariform.noConfigScalariformSettings ++
+  /*val buildFileSettings: Seq[Setting[_]] = //SbtScalariform.noConfigScalariformSettings ++
     inConfig(BuildConfig)(SbtScalariform.configScalariformSettings) ++
     inConfig(BuildSbtConfig)(SbtScalariform.configScalariformSettings) ++ Seq(
     scalaSource in BuildConfig := baseDirectory.value / "project",
@@ -51,7 +51,7 @@ object Formatting {
       (format in BuildConfig).value
     },
     ScalariformKeys.preferences in BuildConfig := formattingPreferences,
-    ScalariformKeys.preferences in BuildSbtConfig := formattingPreferences)
+    ScalariformKeys.preferences in BuildSbtConfig := formattingPreferences)*/
 
   val settings = SbtScalariform.scalariformSettings ++ Seq(
     ScalariformKeys.preferences in Compile := formattingPreferences,

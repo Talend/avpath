@@ -5,7 +5,7 @@ scalaVersion := "2.12.11"
 lazy val avpath = Project("wandou-avpath", file("."))
   .settings(basicSettings: _*)
   .settings(Formatting.settings: _*)
-  .settings(Formatting.buildFileSettings: _*)
+  //.settings(Formatting.buildFileSettings: _*)
   .settings(releaseSettings: _*)
 //  .settings(sbtrelease.ReleasePlugin.releaseSettings: _*)
   .settings(libraryDependencies ++= Dependencies.avro ++ Dependencies.test)
