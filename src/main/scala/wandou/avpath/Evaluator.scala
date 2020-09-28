@@ -16,10 +16,9 @@ import wandou.avpath.Parser.Syntax
 import wandou.avpath.Parser.UnaryExprSyntax
 import wandou.avpath.Parser.PosSyntax
 import java.nio.ByteBuffer
-
 import org.apache.avro.Schema
 import org.apache.avro.Schema.Type
-import org.apache.avro.generic.GenericEnumSymbol
+import org.apache.avro.generic.GenericData.EnumSymbol
 import org.apache.avro.generic.GenericFixed
 import org.apache.avro.generic.IndexedRecord
 
@@ -165,7 +164,7 @@ object Evaluator {
                 case (Type.BYTES, v: ByteBuffer)              => arrayUpdate(arr, idx, v)
                 case (Type.STRING, v: CharSequence)           => arrayUpdate(arr, idx, v)
                 case (Type.RECORD, v: IndexedRecord)          => arrayUpdate(arr, idx, v)
-                case (Type.ENUM, v: GenericEnumSymbol)        => arrayUpdate(arr, idx, v)
+                case (Type.ENUM, v: EnumSymbol)               => arrayUpdate(arr, idx, v)
                 case (Type.FIXED, v: GenericFixed)            => arrayUpdate(arr, idx, v)
                 case (Type.ARRAY, v: java.util.Collection[_]) => arrayUpdate(arr, idx, v)
                 case (Type.MAP, v: java.util.Map[_, _])       => arrayUpdate(arr, idx, v)
@@ -196,7 +195,7 @@ object Evaluator {
                     case (Type.BYTES, v: ByteBuffer)              => arrayInsert(arr, v)
                     case (Type.STRING, v: CharSequence)           => arrayInsert(arr, v)
                     case (Type.RECORD, v: IndexedRecord)          => arrayInsert(arr, v)
-                    case (Type.ENUM, v: GenericEnumSymbol)        => arrayInsert(arr, v)
+                    case (Type.ENUM, v: EnumSymbol)               => arrayInsert(arr, v)
                     case (Type.FIXED, v: GenericFixed)            => arrayInsert(arr, v)
                     case (Type.ARRAY, v: java.util.Collection[_]) => arrayInsert(arr, v)
                     case (Type.MAP, v: java.util.Map[_, _])       => arrayInsert(arr, v)
@@ -248,7 +247,7 @@ object Evaluator {
                           case (Type.BYTES, v: ByteBuffer)              => arrayInsert(arr, v)
                           case (Type.STRING, v: CharSequence)           => arrayInsert(arr, v)
                           case (Type.RECORD, v: IndexedRecord)          => arrayInsert(arr, v)
-                          case (Type.ENUM, v: GenericEnumSymbol)        => arrayInsert(arr, v)
+                          case (Type.ENUM, v: EnumSymbol)               => arrayInsert(arr, v)
                           case (Type.FIXED, v: GenericFixed)            => arrayInsert(arr, v)
                           case (Type.ARRAY, v: java.util.Collection[_]) => arrayInsert(arr, v)
                           case (Type.MAP, v: java.util.Map[_, _])       => arrayInsert(arr, v)

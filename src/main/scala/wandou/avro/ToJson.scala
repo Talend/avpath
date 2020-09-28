@@ -3,14 +3,15 @@ package wandou.avro
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.StringWriter
+import com.fasterxml.jackson.databind.JsonNode
 import org.apache.avro.Schema
 import org.apache.avro.Schema.Type
+import org.apache.avro.generic.GenericData.EnumSymbol
 import org.apache.avro.generic.GenericDatumWriter
-import org.apache.avro.generic.GenericEnumSymbol
 import org.apache.avro.generic.IndexedRecord
 import org.apache.avro.io.EncoderFactory
 import org.apache.avro.specific.SpecificDatumWriter
-import org.codehaus.jackson.JsonNode
+import org.apache.avro.util.internal.JacksonUtils
 
 /**
  *
@@ -41,7 +42,7 @@ object ToJson {
         case Type.STRING  => JSON_NODE_FACTORY.textNode(value.asInstanceOf[CharSequence].toString)
         case Type.ENUM =>
           val strVal = value match {
-            case x: GenericEnumSymbol => x.toString
+            case x: EnumSymbol => x.toString
             case x: Enum[_]           => x.toString
             case x: String            => x
           }
@@ -80,8 +81,9 @@ object ToJson {
             val field = fields.next
             val fieldValue = record.get(field.pos)
             val fieldNode = toJsonNode(fieldValue, field.schema)
+            val defaultVal = JacksonUtils.toJsonNode(field.defaultVal())
             // Outputs the field only if its value differs from the field's default:
-            if (field.defaultValue == null || fieldNode != field.defaultValue) {
+            if (defaultVal == null || fieldNode != defaultVal) {
               jsonObject.put(field.name, fieldNode)
             }
           }

@@ -13,6 +13,7 @@ import org.apache.avro.io.DatumReader
 import org.apache.avro.io.DecoderFactory
 import org.apache.avro.io.EncoderFactory
 import org.apache.avro.io.parsing.ResolvingGrammarGenerator
+import org.apache.avro.util.internal.JacksonUtils
 
 object RecordBuilder {
   /**
@@ -252,7 +253,7 @@ class RecordBuilder private (private[RecordBuilder] val record: GenericData.Reco
    *         or null if none is specified in the schema.
    */
   private def getDefaultValue(field: Field): AnyRef = {
-    var json = field.defaultValue
+    var json = JacksonUtils.toJsonNode(field.defaultVal())
     if (json == null)
       //throw new AvroRuntimeException("Field " + field + " not set and has no default value")
       json = DefaultJsonNode.nodeOf(field)

@@ -3,12 +3,12 @@ package wandou
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
+import com.fasterxml.jackson.core.JsonParser.Feature
 import org.apache.avro.Schema
 import org.apache.avro.Schema.Type
 import org.apache.avro.generic.GenericData
 import org.apache.avro.generic.GenericDatumReader
 import org.apache.avro.generic.GenericDatumWriter
-import org.apache.avro.generic.GenericEnumSymbol
 import org.apache.avro.generic.GenericFixed
 import org.apache.avro.generic.IndexedRecord
 import org.apache.avro.io.BinaryDecoder
@@ -17,11 +17,10 @@ import org.apache.avro.io.DecoderFactory
 import org.apache.avro.io.EncoderFactory
 import org.apache.avro.specific.SpecificDatumReader
 import org.apache.avro.specific.SpecificDatumWriter
-import org.codehaus.jackson.JsonFactory
-import org.codehaus.jackson.JsonNode
-import org.codehaus.jackson.JsonParser.Feature
-import org.codehaus.jackson.map.ObjectMapper
-import org.codehaus.jackson.node.JsonNodeFactory
+import com.fasterxml.jackson.core._
+import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
+import com.fasterxml.jackson.databind.node.JsonNodeFactory
+import org.apache.avro.generic.GenericData.EnumSymbol
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
@@ -178,7 +177,7 @@ package object avro {
       case Type.BYTES   => new GenericData.Array[ByteBuffer](capacity, schema)
       case Type.STRING  => new GenericData.Array[CharSequence](capacity, schema)
       case Type.RECORD  => new GenericData.Array[IndexedRecord](capacity, schema)
-      case Type.ENUM    => new GenericData.Array[GenericEnumSymbol](capacity, schema)
+      case Type.ENUM    => new GenericData.Array[EnumSymbol](capacity, schema)
       case Type.ARRAY   => new GenericData.Array[java.util.Collection[_]](capacity, schema)
       case Type.MAP     => new GenericData.Array[java.util.Map[_, _]](capacity, schema)
       case Type.FIXED   => new GenericData.Array[GenericFixed](capacity, schema)
@@ -196,7 +195,7 @@ package object avro {
       case Type.BYTES   => array.asInstanceOf[GenericData.Array[ByteBuffer]].add(value.asInstanceOf[ByteBuffer])
       case Type.STRING  => array.asInstanceOf[GenericData.Array[CharSequence]].add(value.asInstanceOf[CharSequence])
       case Type.RECORD  => array.asInstanceOf[GenericData.Array[IndexedRecord]].add(value.asInstanceOf[IndexedRecord])
-      case Type.ENUM    => array.asInstanceOf[GenericData.Array[GenericEnumSymbol]].add(value.asInstanceOf[GenericEnumSymbol])
+      case Type.ENUM    => array.asInstanceOf[GenericData.Array[EnumSymbol]].add(value.asInstanceOf[EnumSymbol])
       case Type.ARRAY   => array.asInstanceOf[GenericData.Array[java.util.Collection[_]]].add(value.asInstanceOf[java.util.Collection[_]])
       case Type.MAP     => array.asInstanceOf[GenericData.Array[java.util.Map[_, _]]].add(value.asInstanceOf[java.util.Map[_, _]])
       case Type.FIXED   => array.asInstanceOf[GenericData.Array[GenericFixed]].add(value.asInstanceOf[GenericFixed])
@@ -228,7 +227,7 @@ package object avro {
           case Type.STRING  => toLimitedSize[CharSequence](values.asInstanceOf[java.util.Collection[CharSequence]], size, fieldSchema)
           case Type.FIXED   => toLimitedSize[GenericFixed](values.asInstanceOf[java.util.Collection[GenericFixed]], size, fieldSchema)
           case Type.RECORD  => toLimitedSize[IndexedRecord](values.asInstanceOf[java.util.Collection[IndexedRecord]], size, fieldSchema)
-          case Type.ENUM    => toLimitedSize[GenericEnumSymbol](values.asInstanceOf[java.util.Collection[GenericEnumSymbol]], size, fieldSchema)
+          case Type.ENUM    => toLimitedSize[EnumSymbol](values.asInstanceOf[java.util.Collection[EnumSymbol]], size, fieldSchema)
           case Type.MAP     => toLimitedSize[java.util.Map[_, _]](values.asInstanceOf[java.util.Collection[java.util.Map[_, _]]], size, fieldSchema)
           case Type.ARRAY   => toLimitedSize[java.util.Collection[_]](values.asInstanceOf[java.util.Collection[java.util.Collection[_]]], size, fieldSchema)
           case _            => values.asInstanceOf[java.util.Collection[_]] // todo

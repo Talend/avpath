@@ -1,3 +1,4 @@
+//import com.typesafe.sbt.packager.Keys.packageName
 import sbt.Keys._
 import sbt._
 
@@ -15,11 +16,15 @@ object Dependencies {
     "org.scalatest" %% "scalatest" % "3.0.8")
 
   val avro = Seq(
-    "org.apache.avro" % "avro" % "1.8.2")
+    "org.apache.avro" % "avro" % "1.10.0")
+
+  val jackson = Seq(
+    "com.fasterxml.jackson.core" % "jackson-core" % "2.11.2"
+  )
 
   val commonsCollections = "commons-collections" % "commons-collections" % "3.2.2"
 
-  val basic: Seq[ModuleID] = log ++ test ++ avro
+  val basic: Seq[ModuleID] = log ++ test ++ avro ++ jackson
 
   val all = basic
 }
@@ -34,7 +39,7 @@ object Formatting {
   val BuildSbtConfig = config("buildsbt") extend Compile
 
   // invoke: build:scalariformFormat
-  val buildFileSettings: Seq[Setting[_]] = SbtScalariform.noConfigScalariformSettings ++
+  val buildFileSettings: Seq[Setting[_]] = //SbtScalariform.noConfigScalariformSettings ++
     inConfig(BuildConfig)(SbtScalariform.configScalariformSettings) ++
     inConfig(BuildSbtConfig)(SbtScalariform.configScalariformSettings) ++ Seq(
     scalaSource in BuildConfig := baseDirectory.value / "project",
@@ -63,15 +68,15 @@ object Formatting {
   }
 }
 
-object Packaging {
+/*object Packaging {
 
   import com.typesafe.sbt.SbtNativePackager._
 
-  val settings = packagerSettings ++ deploymentSettings ++
+  val settings =
     packageArchetype.java_application ++ Seq(
     name := "wandou-avpath",
-    NativePackagerKeys.packageName := "wandou-avpath")
-}
+    packageName := "wandou-avpath")
+}*/
 
 object CrossVersions {
 

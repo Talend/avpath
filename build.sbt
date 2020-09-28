@@ -7,12 +7,12 @@ lazy val avpath = Project("wandou-avpath", file("."))
   .settings(Formatting.settings: _*)
   .settings(Formatting.buildFileSettings: _*)
   .settings(releaseSettings: _*)
-  .settings(sbtrelease.ReleasePlugin.releaseSettings: _*)
+//  .settings(sbtrelease.ReleasePlugin.releaseSettings: _*)
   .settings(libraryDependencies ++= Dependencies.avro ++ Dependencies.test)
   .settings(dependencyOverrides += Dependencies.commonsCollections)
-  .settings(Packaging.settings: _*)
-  .settings(sbtavro.SbtAvro.avroSettings ++ avroSettingsTest: _*)
-  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+//  .settings(Packaging.settings: _*)
+//  .settings(sbtavro.SbtAvro.avroSettings ++ avroSettingsTest: _*)
+//  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
   .settings(CrossVersions.crossVersionSetting)
 
 lazy val basicSettings = Seq(
@@ -25,18 +25,18 @@ lazy val basicSettings = Seq(
     "Typesafe repo" at "https://repo.typesafe.com/typesafe/releases/"),
   javacOptions ++= Seq("-source", "1.6", "-target", "1.6"))
 
-lazy val avroSettings = Seq(
+/*lazy val avroSettings = Seq(
   sbtavro.SbtAvro.stringType in sbtavro.SbtAvro.avroConfig := "String",
   sourceDirectory in sbtavro.SbtAvro.avroConfig <<= (resourceDirectory in Compile) (_ / "avsc"),
-  version in sbtavro.SbtAvro.avroConfig := "1.8.2")
+  version in sbtavro.SbtAvro.avroConfig := "1.8.2")*/
 
 // Todo rewrite sbt-avro to compile in Test phase.
-lazy val avroSettingsTest = Seq(
+/*lazy val avroSettingsTest = Seq(
   sbtavro.SbtAvro.stringType in sbtavro.SbtAvro.avroConfig := "String",
   sourceDirectory in sbtavro.SbtAvro.avroConfig <<= (resourceDirectory in Test) (_ / "avsc"),
   javaSource in sbtavro.SbtAvro.avroConfig <<= (sourceManaged in Test) (_ / "java" / "compiled_avro"),
   version in sbtavro.SbtAvro.avroConfig := "1.8.2")
-
+*/
 lazy val releaseSettings = Seq(
   credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
   publishTo := {

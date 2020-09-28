@@ -339,7 +339,7 @@ final class Parser {
   }
 
   /**
-   * @param T type of token value
+   * @tparam T type of token value
    */
   def lex[T](): Token[T] = {
     if (buf != null) {
@@ -353,7 +353,7 @@ final class Parser {
   }
 
   /**
-   * @param T type of token value
+   * @tparam T type of token value
    */
   def advance[T](): Token[T] = {
     while (idx < len && isWhiteSpace(path(idx))) {

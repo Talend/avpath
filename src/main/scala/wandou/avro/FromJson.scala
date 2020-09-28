@@ -2,6 +2,8 @@ package wandou.avro
 
 import java.io.ByteArrayInputStream
 import java.io.IOException
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.node.ObjectNode
 import org.apache.avro.Schema
 import org.apache.avro.Schema.Type
 import org.apache.avro.generic.GenericData
@@ -9,8 +11,7 @@ import org.apache.avro.generic.GenericDatumReader
 import org.apache.avro.io.DecoderFactory
 import org.apache.avro.specific.SpecificDatumReader
 import org.apache.avro.specific.SpecificRecord
-import org.codehaus.jackson.JsonNode
-import org.codehaus.jackson.node.ObjectNode
+import org.apache.avro.util.internal.JacksonUtils
 
 /**
  *
@@ -23,9 +24,9 @@ object FromJson {
    *
    * Comply with specified default values when decoding records with missing fields.
    *
-   * @param json JSON node to decode.
-   * @param schema Avro schema of the value to decode.
-   * @param to specified or generic value, default generic
+   * @param json     JSON node to decode.
+   * @param schema   Avro schema of the value to decode.
+   * @param specific specified or generic value, default generic
    * @return the decoded value.
    * @throws IOException on error.
    */
@@ -34,42 +35,42 @@ object FromJson {
     schema.getType match {
       case Type.INT =>
         if (json.isInt) {
-          json.getIntValue
+          json.asInt()
         } else {
           throw new IOException("Avro schema specifies '%s' but got JSON value: '%s'.".format(schema, json))
         }
 
       case Type.LONG =>
         if (json.isLong || json.isInt) {
-          json.getLongValue
+          json.asLong()
         } else {
           throw new IOException("Avro schema specifies '%s' but got JSON value: '%s'.".format(schema, json))
         }
 
       case Type.FLOAT =>
         if (json.isDouble || json.isInt || json.isLong) {
-          json.getDoubleValue.toFloat
+          json.asDouble().toFloat
         } else {
           throw new IOException("Avro schema specifies '%s' but got JSON value: '%s'.".format(schema, json))
         }
 
       case Type.DOUBLE =>
         if (json.isDouble || json.isInt || json.isLong) {
-          json.getDoubleValue
+          json.asDouble()
         } else {
           throw new IOException("Avro schema specifies '%s' but got JSON value: '%s'.".format(schema, json))
         }
 
       case Type.STRING =>
         if (json.isTextual) {
-          json.getTextValue
+          json.asText()
         } else {
           throw new IOException("Avro schema specifies '%s' but got JSON value: '%s'.".format(schema, json))
         }
 
       case Type.BOOLEAN =>
         if (json.isBoolean) {
-          json.getBooleanValue
+          json.asBoolean()
         } else {
           throw new IOException(String.format("Avro schema specifies '%s' but got JSON value: '%s'.", schema, json))
         }
@@ -80,7 +81,7 @@ object FromJson {
         } else {
           if (json.isArray) {
             val arr = newGenericArray(0, schema)
-            val itr = json.getElements
+            val itr = json.elements()
             while (itr.hasNext) {
               val element = itr.next
               addGenericArray(arr, fromJsonNode(element, schema.getElementType, specific))
@@ -98,7 +99,7 @@ object FromJson {
           if (json.isObject) {
             //assert json instanceof ObjectNode; // Help findbugs out.
             val map = new java.util.HashMap[String, Any]()
-            val itr = json.asInstanceOf[ObjectNode].getFields
+            val itr = json.asInstanceOf[ObjectNode].fields()
             while (itr.hasNext) {
               val entry = itr.next
               map.put(entry.getKey, fromJsonNode(entry.getValue, schema.getValueType, specific))
@@ -115,19 +116,20 @@ object FromJson {
         } else {
           if (json.isObject) {
             import scala.collection.JavaConversions._
-            var fields = json.getFieldNames.toSet
+            var fields = json.fieldNames().toSet
             val record = if (specific) newSpecificRecord(schema.getFullName) else newGenericRecord(schema)
             val itr = schema.getFields.iterator
             while (itr.hasNext) {
-              val field = itr.next
+              val field: Schema.Field = itr.next
               val name = field.name
               val element = json.get(name)
               if (element != null) {
                 val value = fromJsonNode(element, field.schema, specific)
                 record.put(field.pos, value)
               } else {
-                val defaultValue = if (field.defaultValue != null) {
-                  field.defaultValue
+                val defaultVal = JacksonUtils.toJsonNode(field.defaultVal())
+                val defaultValue = if (defaultVal != null) {
+                  defaultVal
                 } else {
                   DefaultJsonNode.nodeOf(field)
                 }
@@ -164,7 +166,7 @@ object FromJson {
 
       case Type.ENUM =>
         if (json.isTextual) {
-          val enumValStr = json.getTextValue
+          val enumValStr = json.textValue()
           if (specific) enumValue(schema.getFullName, enumValStr) else enumGenericValue(schema, enumValStr)
         } else {
           throw new IOException("Avro schema specifies enum '%s' but got non-string JSON value: '%s'.".format(schema, json))
@@ -178,7 +180,7 @@ object FromJson {
   /**
    * Decodes a union from a JSON node.
    *
-   * @param json JSON node to decode.
+   * @param json   JSON node to decode.
    * @param schema Avro schema of the union value to decode.
    * @return the decoded value.
    * @throws IOException on error.
@@ -212,7 +214,7 @@ object FromJson {
     }
 
     if (json.isObject && (json.size == 1)) {
-      val entry = json.getFields.next()
+      val entry = json.fields().next()
       val typeName = entry.getKey
       val actualNode = entry.getValue
 
@@ -241,7 +243,7 @@ object FromJson {
   /**
    * Decodes a JSON encoded record.
    *
-   * @param json JSON tree to decode, encoded as a string.
+   * @param json   JSON tree to decode, encoded as a string.
    * @param schema Avro schema of the value to decode.
    * @return the decoded value.
    * @throws IOException on error.
@@ -257,7 +259,7 @@ object FromJson {
   /**
    * Decodes a JSON encoded record.
    *
-   * @param json JSON tree to decode, encoded as a string.
+   * @param json   JSON tree to decode, encoded as a string.
    * @param schema Avro schema of the value to decode.
    * @return the decoded value.
    * @throws IOException on error.
@@ -273,7 +275,7 @@ object FromJson {
   /**
    * Instantiates a specific record by name.
    *
-   * @param fullName Fully qualified record name to instantiate.
+   * @param schema Fully qualified record name to instantiate.
    * @return a brand-new specific record instance of the given class.
    * @throws IOException on error.
    */
@@ -302,8 +304,8 @@ object FromJson {
   /**
    * Looks up an Avro enum by name and string value.
    *
-   * @param fullName Fully qualified enum name to look-up.
-   * @param value Enum value as a string.
+   * @param schema Fully qualified enum name to look-up.
+   * @param value  Enum value as a string.
    * @return the Java enum value.
    * @throws IOException on error.
    */
@@ -316,7 +318,7 @@ object FromJson {
    * Looks up an Avro enum by name and string value.
    *
    * @param fullName Fully qualified enum name to look-up.
-   * @param value Enum value as a string.
+   * @param value    Enum value as a string.
    * @return the Java enum value.
    * @throws IOException on error.
    */
@@ -355,7 +357,7 @@ object FromJson {
   /**
    * Standard Avro JSON decoder.
    *
-   * @param json JSON string to decode.
+   * @param json   JSON string to decode.
    * @param schema Schema of the value to decode.
    * @return the decoded value.
    * @throws IOException on error.
