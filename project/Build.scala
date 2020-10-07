@@ -19,6 +19,11 @@ object Dependencies {
 
   val commonsCollections = "commons-collections" % "commons-collections" % "3.2.2"
 
+  val jackson = Set(
+    "org.codehaus.jackson" % "jackson-core-asl" % "1.9.15-TALEND",
+    "org.codehaus.jackson" % "jackson-mapper-asl" % "1.9.15-TALEND"
+  )
+
   val basic: Seq[ModuleID] = log ++ test ++ avro
 
   val all = basic

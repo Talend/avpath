@@ -10,9 +10,9 @@ lazy val avpath = Project("wandou-avpath", file("."))
   .settings(sbtrelease.ReleasePlugin.releaseSettings: _*)
   .settings(libraryDependencies ++= Dependencies.avro ++ Dependencies.test)
   .settings(dependencyOverrides += Dependencies.commonsCollections)
+  .settings(dependencyOverrides ++= Dependencies.jackson)
   .settings(Packaging.settings: _*)
   .settings(sbtavro.SbtAvro.avroSettings ++ avroSettingsTest: _*)
-  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
   .settings(CrossVersions.crossVersionSetting)
 
 lazy val basicSettings = Seq(
@@ -22,7 +22,9 @@ lazy val basicSettings = Seq(
   resolvers ++= Seq(
     "Sonatype OSS Releases" at "https://oss.sonatype.org/content/repositories/releases",
     "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
-    "Typesafe repo" at "https://repo.typesafe.com/typesafe/releases/"),
+    "Typesafe repo" at "https://repo.typesafe.com/typesafe/releases/",
+    "Talend Open Source Releases" at "https://artifacts-oss.talend.com/nexus/content/repositories/public/"
+  ),
   javacOptions ++= Seq("-source", "1.6", "-target", "1.6"))
 
 lazy val avroSettings = Seq(
