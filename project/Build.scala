@@ -15,7 +15,7 @@ object Dependencies {
     "org.scalatest" %% "scalatest" % "3.0.8")
 
   val avro = Seq(
-    "org.apache.avro" % "avro" % "1.8.2")
+    "org.apache.avro" % "avro" % "1.10.0")
 
   val commonsCollections = "commons-collections" % "commons-collections" % "3.2.2"
 
