@@ -12,7 +12,7 @@ object Dependencies {
 
   val test = Seq(
     "org.scalamock" %% "scalamock-scalatest-support" % "3.6.0",
-    "org.scalatest" %% "scalatest" % "3.0.8")
+    "org.scalatest" %% "scalatest" % "3.2.0")
 
   val avro = Seq(
     "org.apache.avro" % "avro" % "1.8.2")
