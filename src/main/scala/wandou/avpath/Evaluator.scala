@@ -2,7 +2,7 @@ package wandou.avpath
 
 import org.apache.avro.Schema
 import org.apache.avro.Schema.Type
-import org.apache.avro.generic.{GenericData, GenericEnumSymbol, GenericFixed, IndexedRecord}
+import org.apache.avro.generic.{ GenericData, GenericEnumSymbol, GenericFixed, IndexedRecord }
 import wandou.avpath.Parser._
 import wandou.avro.FromJson
 
@@ -114,14 +114,14 @@ object Evaluator {
           case TargetRecord(rec, field, _) =>
             rec.get(field.pos) match {
               case arr: java.util.Collection[_] => arr.clear
-              case map: java.util.Map[_, _] => map.clear
-              case _ => // ?
+              case map: java.util.Map[_, _]     => map.clear
+              case _                            => // ?
             }
 
           case _: TargetArray =>
           // why you be here, for Insert, you should op on record's arr field directly
 
-          case _: TargetMap =>
+          case _: TargetMap   =>
           // why you be here, for Insert, you should op on record's map field directly
         }
 
@@ -131,7 +131,7 @@ object Evaluator {
             val value1 = if (isJsonValue) FromJson.fromJsonString(value.asInstanceOf[String], rec.getSchema, false) else value
             value1 match {
               case v: IndexedRecord => replace(rec, v)
-              case _ => // log.error
+              case _                => // log.error
             }
 
           case TargetRecord(rec, field, _) =>
@@ -142,19 +142,19 @@ object Evaluator {
             getElementType(arrSchema) foreach { elemSchema =>
               val value1 = if (isJsonValue) FromJson.fromJsonString(value.asInstanceOf[String], elemSchema, false) else value
               (elemSchema.getType, value1) match {
-                case (Type.BOOLEAN, v: Boolean) => arrayUpdate(arr, idx, v)
-                case (Type.INT, v: Int) => arrayUpdate(arr, idx, v)
-                case (Type.LONG, v: Long) => arrayUpdate(arr, idx, v)
-                case (Type.FLOAT, v: Float) => arrayUpdate(arr, idx, v)
-                case (Type.DOUBLE, v: Double) => arrayUpdate(arr, idx, v)
-                case (Type.BYTES, v: ByteBuffer) => arrayUpdate(arr, idx, v)
-                case (Type.STRING, v: CharSequence) => arrayUpdate(arr, idx, v)
-                case (Type.RECORD, v: IndexedRecord) => arrayUpdate(arr, idx, v)
-                case (Type.ENUM, v: GenericEnumSymbol) => arrayUpdate(arr, idx, v)
-                case (Type.FIXED, v: GenericFixed) => arrayUpdate(arr, idx, v)
+                case (Type.BOOLEAN, v: Boolean)               => arrayUpdate(arr, idx, v)
+                case (Type.INT, v: Int)                       => arrayUpdate(arr, idx, v)
+                case (Type.LONG, v: Long)                     => arrayUpdate(arr, idx, v)
+                case (Type.FLOAT, v: Float)                   => arrayUpdate(arr, idx, v)
+                case (Type.DOUBLE, v: Double)                 => arrayUpdate(arr, idx, v)
+                case (Type.BYTES, v: ByteBuffer)              => arrayUpdate(arr, idx, v)
+                case (Type.STRING, v: CharSequence)           => arrayUpdate(arr, idx, v)
+                case (Type.RECORD, v: IndexedRecord)          => arrayUpdate(arr, idx, v)
+                case (Type.ENUM, v: GenericEnumSymbol)        => arrayUpdate(arr, idx, v)
+                case (Type.FIXED, v: GenericFixed)            => arrayUpdate(arr, idx, v)
                 case (Type.ARRAY, v: java.util.Collection[_]) => arrayUpdate(arr, idx, v)
-                case (Type.MAP, v: java.util.Map[_, _]) => arrayUpdate(arr, idx, v)
-                case _ => // todo
+                case (Type.MAP, v: java.util.Map[_, _])       => arrayUpdate(arr, idx, v)
+                case _                                        => // todo
               }
             }
 
@@ -173,19 +173,19 @@ object Evaluator {
                 getElementType(field.schema) foreach { elemSchema =>
                   val value1 = if (isJsonValue) FromJson.fromJsonString(value.asInstanceOf[String], elemSchema, false) else value
                   (elemSchema.getType, value1) match {
-                    case (Type.BOOLEAN, v: Boolean) => arrayInsert(arr, v)
-                    case (Type.INT, v: Int) => arrayInsert(arr, v)
-                    case (Type.LONG, v: Long) => arrayInsert(arr, v)
-                    case (Type.FLOAT, v: Float) => arrayInsert(arr, v)
-                    case (Type.DOUBLE, v: Double) => arrayInsert(arr, v)
-                    case (Type.BYTES, v: ByteBuffer) => arrayInsert(arr, v)
-                    case (Type.STRING, v: CharSequence) => arrayInsert(arr, v)
-                    case (Type.RECORD, v: IndexedRecord) => arrayInsert(arr, v)
-                    case (Type.ENUM, v: GenericEnumSymbol) => arrayInsert(arr, v)
-                    case (Type.FIXED, v: GenericFixed) => arrayInsert(arr, v)
+                    case (Type.BOOLEAN, v: Boolean)               => arrayInsert(arr, v)
+                    case (Type.INT, v: Int)                       => arrayInsert(arr, v)
+                    case (Type.LONG, v: Long)                     => arrayInsert(arr, v)
+                    case (Type.FLOAT, v: Float)                   => arrayInsert(arr, v)
+                    case (Type.DOUBLE, v: Double)                 => arrayInsert(arr, v)
+                    case (Type.BYTES, v: ByteBuffer)              => arrayInsert(arr, v)
+                    case (Type.STRING, v: CharSequence)           => arrayInsert(arr, v)
+                    case (Type.RECORD, v: IndexedRecord)          => arrayInsert(arr, v)
+                    case (Type.ENUM, v: GenericEnumSymbol)        => arrayInsert(arr, v)
+                    case (Type.FIXED, v: GenericFixed)            => arrayInsert(arr, v)
                     case (Type.ARRAY, v: java.util.Collection[_]) => arrayInsert(arr, v)
-                    case (Type.MAP, v: java.util.Map[_, _]) => arrayInsert(arr, v)
-                    case _ => // todo
+                    case (Type.MAP, v: java.util.Map[_, _])       => arrayInsert(arr, v)
+                    case _                                        => // todo
                   }
                 }
 
@@ -209,7 +209,7 @@ object Evaluator {
           case _: TargetArray =>
           // why you be here, for Insert, you should op on record's arr field directly
 
-          case _: TargetMap =>
+          case _: TargetMap   =>
           // why you be here, for Insert, you should op on record's map field directly
         }
 
@@ -225,19 +225,19 @@ object Evaluator {
                       val itr = xs.iterator
                       while (itr.hasNext) {
                         (elemSchema.getType, itr.next) match {
-                          case (Type.BOOLEAN, v: Boolean) => arrayInsert(arr, v)
-                          case (Type.INT, v: Int) => arrayInsert(arr, v)
-                          case (Type.LONG, v: Long) => arrayInsert(arr, v)
-                          case (Type.FLOAT, v: Float) => arrayInsert(arr, v)
-                          case (Type.DOUBLE, v: Double) => arrayInsert(arr, v)
-                          case (Type.BYTES, v: ByteBuffer) => arrayInsert(arr, v)
-                          case (Type.STRING, v: CharSequence) => arrayInsert(arr, v)
-                          case (Type.RECORD, v: IndexedRecord) => arrayInsert(arr, v)
-                          case (Type.ENUM, v: GenericEnumSymbol) => arrayInsert(arr, v)
-                          case (Type.FIXED, v: GenericFixed) => arrayInsert(arr, v)
+                          case (Type.BOOLEAN, v: Boolean)               => arrayInsert(arr, v)
+                          case (Type.INT, v: Int)                       => arrayInsert(arr, v)
+                          case (Type.LONG, v: Long)                     => arrayInsert(arr, v)
+                          case (Type.FLOAT, v: Float)                   => arrayInsert(arr, v)
+                          case (Type.DOUBLE, v: Double)                 => arrayInsert(arr, v)
+                          case (Type.BYTES, v: ByteBuffer)              => arrayInsert(arr, v)
+                          case (Type.STRING, v: CharSequence)           => arrayInsert(arr, v)
+                          case (Type.RECORD, v: IndexedRecord)          => arrayInsert(arr, v)
+                          case (Type.ENUM, v: GenericEnumSymbol)        => arrayInsert(arr, v)
+                          case (Type.FIXED, v: GenericFixed)            => arrayInsert(arr, v)
                           case (Type.ARRAY, v: java.util.Collection[_]) => arrayInsert(arr, v)
-                          case (Type.MAP, v: java.util.Map[_, _]) => arrayInsert(arr, v)
-                          case _ => // todo
+                          case (Type.MAP, v: java.util.Map[_, _])       => arrayInsert(arr, v)
+                          case _                                        => // todo
 
                         }
                       }
@@ -253,7 +253,7 @@ object Evaluator {
                     while (itr.hasNext) {
                       itr.next match {
                         case (k: String, v) => map.asInstanceOf[java.util.Map[String, Any]].put(k, v)
-                        case _ => // ?
+                        case _              => // ?
                       }
                     }
 
@@ -263,7 +263,7 @@ object Evaluator {
                       val entry = itr.next
                       entry.getKey match {
                         case k: String => map.asInstanceOf[java.util.Map[String, Any]].put(k, entry.getValue)
-                        case _ => // ?
+                        case _         => // ?
                       }
                     }
 
@@ -274,7 +274,7 @@ object Evaluator {
           case _: TargetArray =>
           // why you be here, for Insert, you should op on record's arr field directly
 
-          case _: TargetMap =>
+          case _: TargetMap   =>
           // why you be here, for Insert, you should op on record's map field directly
         }
     }
@@ -285,7 +285,7 @@ object Evaluator {
   private def arrayUpdate[T](arr: java.util.Collection[_], idx: Int, value: T) {
     if (idx >= 0) {
       arr match {
-        case xs: java.util.List[T]@unchecked =>
+        case xs: java.util.List[T] @unchecked =>
           if (idx < xs.size) {
             xs.set(idx, value)
           }
@@ -346,7 +346,7 @@ object Evaluator {
       parts(i) match {
         case x: SelectorSyntax =>
           x.selector match {
-            case "." => ctxs = evaluateSelector(x, ctxs, isTopLevel)
+            case "."  => ctxs = evaluateSelector(x, ctxs, isTopLevel)
             case ".." => ctxs = evaluateDescendantSelector(x, ctxs)
           }
           isResArray = true
@@ -356,8 +356,8 @@ object Evaluator {
 
         case x: PosPredSyntax =>
           ctxs = evaluatePosPredicate(x, ctxs) match {
-            case List() => List()
-            case List(Left(v)) => List(v)
+            case List()          => List()
+            case List(Left(v))   => List(v)
             case List(Right(xs)) => List(xs.toList).flatten
           }
 
@@ -463,10 +463,10 @@ object Evaluator {
   private def evaluateObjectPredicate(expr: ObjPredSyntax, ctxs: List[Ctx]): List[Ctx] = {
     var res = List[Ctx]()
     ctxs foreach {
-      case currCtx@Ctx(rec: IndexedRecord, _, _, _, _, _) =>
+      case currCtx @ Ctx(rec: IndexedRecord, _, _, _, _, _) =>
         evaluateExpr(expr.arg, currCtx) match {
           case true => res ::= currCtx
-          case _ =>
+          case _    =>
         }
 
       case Ctx(arr: java.util.Collection[_], name, schema, topLevelField, path, _) =>
@@ -480,13 +480,13 @@ object Evaluator {
             val elemCtx = Ctx(value, name, elemType, topLevelField, path, Some(TargetArray(arr, i, schema)))
             evaluateExpr(expr.arg, elemCtx) match {
               case true => res ::= elemCtx
-              case _ =>
+              case _    =>
             }
             i += 1
           }
         }
 
-      case Ctx(map: java.util.Map[String, _]@unchecked, name, schema, topLevelField, path, _) =>
+      case Ctx(map: java.util.Map[String, _] @unchecked, name, schema, topLevelField, path, _) =>
         getValueType(schema) foreach { elemType =>
           val entries = map.entrySet.iterator
           while (entries.hasNext) {
@@ -496,7 +496,7 @@ object Evaluator {
             val elemCtx = Ctx(entry.getValue, name, elemType, topLevelField, path, Some(TargetMap(map, entry.getKey, schema)))
             evaluateExpr(expr.arg, elemCtx) match {
               case true => res ::= elemCtx
-              case _ =>
+              case _    =>
             }
           }
         }
@@ -512,7 +512,7 @@ object Evaluator {
 
     var res = List[Either[Ctx, Array[Ctx]]]()
     ctxs foreach {
-      case currCtx@Ctx(arr: java.util.Collection[_], name, schema, topLevelField, path, _) =>
+      case currCtx @ Ctx(arr: java.util.Collection[_], name, schema, topLevelField, path, _) =>
         getElementType(schema) foreach { elemType =>
           posExpr match {
             case PosSyntax(LiteralSyntax("*"), _, _) =>
@@ -666,8 +666,8 @@ object Evaluator {
   private def evaluateMapValues(syntax: MapKeysSyntax, ctxs: List[Ctx]): List[Ctx] = {
     val expectKeys = syntax.keys
     ctxs.foldLeft(List[Ctx]()) { (finalResult, ctx) =>
-      val tt = ctx match {
-        case Ctx(map: java.util.Map[String, _]@unchecked, name, schema, topLevelField, path, _) =>
+      val result = ctx match {
+        case Ctx(map: java.util.Map[String, _] @unchecked, name, schema, topLevelField, path, _) =>
           var res = List[Ctx]()
           getValueType(schema) foreach { valueSchema =>
             // the order of selected map items is not guaranteed due to the implemetation of java.util.Map
@@ -676,7 +676,7 @@ object Evaluator {
               val entry = entries.next
               val key = entry.getKey
               expectKeys.collectFirst {
-                case Left(expectKey) if expectKey == key => entry.getValue
+                case Left(expectKey) if expectKey == key        => entry.getValue
                 case Right(regex) if regex.matcher(key).matches => entry.getValue
               } foreach { value =>
                 res = Ctx(value, name, valueSchema, topLevelField, path, Some(TargetMap(map, key, schema))) :: res
@@ -684,20 +684,18 @@ object Evaluator {
             }
           }
           res.reverse
-        case Ctx(record: GenericData.Record@unchecked, name, _, topLevelField, path, _) =>
+        case Ctx(record: GenericData.Record @unchecked, name, _, topLevelField, path, _) =>
           record.getSchema.getFields.asScala.foldLeft(List[Ctx]()) { (res, field) =>
-            val t = expectKeys.collectFirst {
-              case Left(expectKey) if expectKey == field.name() => record.get(field.pos())
+            res ++ expectKeys.collectFirst {
+              case Left(expectKey) if expectKey == field.name()        => record.get(field.pos())
               case Right(regex) if regex.matcher(field.name()).matches => record.get(field.pos())
             }.foldLeft(List[Ctx]()) { (res2, value) =>
               Ctx(value, name, field.schema(), topLevelField, path, Some(TargetRecord(record, field, null))) :: res2
             }
 
-            res ++ t
-
           }
       }
-      finalResult ++ tt
+      finalResult ++ result
     }
 
   }
@@ -724,7 +722,7 @@ object Evaluator {
 
       case x: SubstSyntax => // TODO 
 
-      case _ => // should not happen
+      case _              => // should not happen
     }
   }
 
@@ -783,11 +781,11 @@ object Evaluator {
 
       case "-" =>
         value match {
-          case x: Int => -x
-          case x: Long => -x
-          case x: Float => -x
+          case x: Int    => -x
+          case x: Long   => -x
+          case x: Float  => -x
           case x: Double => -x
-          case _ => // error
+          case _         => // error
         }
     }
   }
@@ -811,25 +809,25 @@ object Evaluator {
       case _: LogicalExprSyntax =>
         value match {
           case x: Boolean => x
-          case _ => false
+          case _          => false
         }
 
       case _: LiteralSyntax[_] =>
         value match {
           case x: Boolean => x
-          case _ => false
+          case _          => false
         }
 
       case _: PathSyntax =>
         value match {
           case x: Boolean => x
-          case _ => false
+          case _          => false
         }
 
       case _ =>
         value match {
           case x: Boolean => x
-          case _ => false
+          case _          => false
         }
     }
   }
@@ -840,11 +838,11 @@ object Evaluator {
       case _: PathSyntax =>
         value match {
           case h :: xs => h
-          case _ => value
+          case _       => value
         }
       case _ => value match {
         case h :: xs => h
-        case _ => value
+        case _       => value
       }
     }
   }
@@ -857,7 +855,7 @@ object Evaluator {
       case "==" =>
         (v1, v2) match {
           case (s1: CharSequence, s2: CharSequence) => s1.toString.toLowerCase == s2.toString.toLowerCase
-          case _ => v1 == v2
+          case _                                    => v1 == v2
         }
 
       case "!==" =>
@@ -869,91 +867,91 @@ object Evaluator {
       case "^==" =>
         (v1, v2) match {
           case (s1: CharSequence, s2: CharSequence) => s1.toString.startsWith(s2.toString)
-          case _ => false
+          case _                                    => false
         }
 
       case "^=" =>
         (v1, v2) match {
           case (s1: CharSequence, s2: CharSequence) => s1.toString.toLowerCase.startsWith(s2.toString.toLowerCase)
-          case _ => false
+          case _                                    => false
         }
 
       case "$==" =>
         (v1, v2) match {
           case (s1: CharSequence, s2: CharSequence) => s1.toString.endsWith(s2.toString)
-          case _ => false
+          case _                                    => false
         }
 
       case "$=" =>
         (v1, v2) match {
           case (s1: CharSequence, s2: CharSequence) => s1.toString.toLowerCase.endsWith(s2.toString.toLowerCase)
-          case _ => false
+          case _                                    => false
         }
 
       case "*==" =>
         (v1, v2) match {
           case (s1: CharSequence, s2: CharSequence) => s1.toString.contains(s2)
-          case _ => false
+          case _                                    => false
         }
 
       case "*=" =>
         (v1, v2) match {
           case (s1: CharSequence, s2: CharSequence) => s1.toString.toLowerCase.contains(s2.toString.toLowerCase)
-          case _ => false
+          case _                                    => false
         }
 
       case ">=" =>
         (v1.asInstanceOf[AnyRef], v2.asInstanceOf[AnyRef]) match {
           case (c1: Number, c2: Number) => c1.doubleValue >= c2.doubleValue
-          case _ => false
+          case _                        => false
         }
 
       case ">" =>
         (v1.asInstanceOf[AnyRef], v2.asInstanceOf[AnyRef]) match {
           case (c1: Number, c2: Number) => c1.doubleValue > c2.doubleValue
-          case _ => false
+          case _                        => false
         }
 
       case "<=" =>
         (v1.asInstanceOf[AnyRef], v2.asInstanceOf[AnyRef]) match {
           case (c1: Number, c2: Number) => c1.doubleValue <= c2.doubleValue
-          case _ => false
+          case _                        => false
         }
 
       case "<" =>
         (v1.asInstanceOf[AnyRef], v2.asInstanceOf[AnyRef]) match {
           case (c1: Number, c2: Number) => c1.doubleValue < c2.doubleValue
-          case _ => false
+          case _                        => false
         }
 
       case "+" =>
         (v1.asInstanceOf[AnyRef], v2.asInstanceOf[AnyRef]) match {
           case (c1: Number, c2: Number) => c1.doubleValue + c2.doubleValue
-          case _ => Double.NaN
+          case _                        => Double.NaN
         }
 
       case "-" =>
         (v1.asInstanceOf[AnyRef], v2.asInstanceOf[AnyRef]) match {
           case (c1: Number, c2: Number) => c1.doubleValue - c2.doubleValue
-          case _ => Double.NaN
+          case _                        => Double.NaN
         }
 
       case "*" =>
         (v1.asInstanceOf[AnyRef], v2.asInstanceOf[AnyRef]) match {
           case (c1: Number, c2: Number) => c1.doubleValue * c2.doubleValue
-          case _ => Double.NaN
+          case _                        => Double.NaN
         }
 
       case "/" =>
         (v1.asInstanceOf[AnyRef], v2.asInstanceOf[AnyRef]) match {
           case (c1: Number, c2: Number) => c1.doubleValue / c2.doubleValue
-          case _ => Double.NaN
+          case _                        => Double.NaN
         }
 
       case "%" =>
         (v1.asInstanceOf[AnyRef], v2.asInstanceOf[AnyRef]) match {
           case (c1: Number, c2: Number) => c1.doubleValue % c2.doubleValue
-          case _ => Double.NaN
+          case _                        => Double.NaN
         }
     }
   }
