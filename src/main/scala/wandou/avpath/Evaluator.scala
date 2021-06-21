@@ -694,6 +694,7 @@ object Evaluator {
             }
 
           }
+        case _ => finalResult
       }
       finalResult ++ result
     }
